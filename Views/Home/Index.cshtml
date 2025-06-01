@@ -5,6 +5,11 @@
 <head>
     <meta charset="utf-8" />
     <title>تطبيق المهام اليومية - MVC</title>
+    <style>
+        .edit-form {
+            display: none; /* Hidden by default */
+        }
+    </style>
 </head>
 <body>
     <h1>قائمة المهام اليومية</h1>
@@ -18,20 +23,43 @@
                 }
                 else
                 {
-                    @task.Title
+               <span id="taskTitle_@task.Id">@task.Title</span>
+                    
                     <form method="post" asp-action="CompleteTask" style="display:inline;">
                         <input type="hidden" name="id" value="@task.Id" />
-                        <button type="submit">اكتملت</button>
+                    <button type="submit">اكتملت</button>
                     </form>
 
+                    <button onclick="showEditForm(@task.Id)">تعديل</button>
+
+                    <div id="editForm_@task.Id" class="edit-form" style="display:none;">
+                        <form method="post" asp-action="EditTask" style="display:inline;">
+                            <input type="hidden" name="id" value="@task.Id" />
+                            <input type="text" name="title" value="@task.Title" />
+                            <button type="submit">حفظ</button>
+                            <button type="button" onclick="hideEditForm(@task.Id)">إلغاء</button>
+                        </form>
+                    </div>
                 }
             </li>
         }
     </ul>
 
-    <form method="post" asp-action="AddTask">
+   <form method="post" asp-action="AddTask">
         <input type="text" name="title" placeholder="أضف مهمة جديدة" />
-        <button type="submit">إضافة</button>
+      <button type="submit">إضافة</button>
     </form>
+
+    <script>
+        function showEditForm(taskId) {
+            document.getElementById('editForm_' + taskId).style.display = 'inline';
+            document.getElementById('taskTitle_' + taskId).style.display = 'none'; // Hide the title span
+        }
+
+        function hideEditForm(taskId) {
+            document.getElementById('editForm_' + taskId).style.display = 'none';
+            document.getElementById('taskTitle_' + taskId).style.display = 'inline'; // Show the title span
+        }
+    </script>
 </body>
 </html>
